@@ -10,14 +10,18 @@ export const app = express();
 
 app.use(helmet());
 
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  env.FRONTEND_URL,
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:4173"
+].filter((origin): origin is string => Boolean(origin));
+
 app.use(
   cors({
-    origin: [
-      env.FRONTEND_URL,
-      "http://localhost:5173",
-      "http://127.0.0.1:5173",
-      "http://localhost:4173"
-    ],
+    origin: allowedOrigins,
     credentials: true
   })
 );
@@ -40,6 +44,7 @@ const apiLimiter = rateLimit({
 });
 
 app.use("/api/v1", apiLimiter, apiV1Router);
+app.use("/v1", apiLimiter, apiV1Router);
 
 app.use((_req, res) => {
   res.status(404).json({
@@ -53,3 +58,5 @@ app.use((_req, res) => {
 });
 
 app.use(errorHandler);
+
+export default app;

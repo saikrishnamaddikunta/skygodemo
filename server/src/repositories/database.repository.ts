@@ -1266,8 +1266,12 @@ class DatabaseRepository {
 
   constructor() {
     const dataDir = path.resolve(__dirname, "../../data");
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
+    try {
+      if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+      }
+    } catch {
+      // Ignore directory creation error in read-only serverless environments
     }
     this.dbFilePath = path.join(dataDir, "omnitransit-db.json");
     this.state = this.loadState();

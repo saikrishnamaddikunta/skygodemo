@@ -16,11 +16,15 @@ httpServer.on("error", (err: NodeJS.ErrnoException) => {
   }
 });
 
-httpServer.listen(env.PORT, "0.0.0.0", () => {
-  logger.info(`SKYGO Server listening on http://127.0.0.1:${env.PORT}`, {
-    environment: env.NODE_ENV,
-    timezone: env.DEFAULT_TIMEZONE,
-    currency: env.DEFAULT_CURRENCY,
-    integrations: integrationStatus
+if (!process.env.VERCEL) {
+  httpServer.listen(env.PORT, "0.0.0.0", () => {
+    logger.info(`SKYGO Server listening on http://127.0.0.1:${env.PORT}`, {
+      environment: env.NODE_ENV,
+      timezone: env.DEFAULT_TIMEZONE,
+      currency: env.DEFAULT_CURRENCY,
+      integrations: integrationStatus
+    });
   });
-});
+}
+
+export default app;

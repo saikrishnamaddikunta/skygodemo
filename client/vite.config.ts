@@ -2,6 +2,8 @@ import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+const serverUrl = process.env.SERVER_URL || "http://127.0.0.1:5050";
+
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -14,11 +16,11 @@ export default defineConfig({
     open: true,
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:5050",
+        target: serverUrl,
         changeOrigin: true
       },
       "/socket.io": {
-        target: "http://127.0.0.1:5050",
+        target: serverUrl,
         ws: true
       }
     }
